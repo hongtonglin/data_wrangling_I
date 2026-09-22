@@ -3,4 +3,60 @@ title: "Data Import"
 output: github_document
 ---
   
+This file is for doing data import.  
+  
+## Import 2 data sets  
+
+```{r load libraries, message=FALSE}
+library(tidyverse)
+```
+  
+Import the first dataset.  
+
+```{r import the data, clean head names}
+(litters_df <- 
+  read_csv(file = "data/FAS_litters.csv")) 
+#always use a relative path name that everyone can use 
+#in the output, the GD0 weight is a character not a number. 
+
+
+(litters_df <- janitor::clean_names(litters_df)) #clean names to have the same rule
+```
+  
+Import the FAS_pups dataset.  
+```{r import FAS_pups dataset}
+pups_df = 
+  read_csv("data/FAS_pups.csv", skip = 3)
+# "skip=3" can skip the first 3 rows.  
+
+pups_df = janitor::clean_names(pups_df)
+```
+  
+## Look at the data  
+
+```{r check the data set}
+litters_df
+pups_df
+```
+  
+Head or Tail  
+
+```{r first and last part of each data set}
+head(litters_df, 20)
+
+tail(pups_df, 5)
+```
+  
+skimming: **do it in the console**  
+
+```{r skim the dataset}
+skimr::skim(pups_df)
+```
+  
+Viewing: **do it in the console**  
+
+```{r}
+view(pups_df)
+```
+
 
