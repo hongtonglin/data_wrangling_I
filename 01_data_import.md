@@ -7,6 +7,8 @@ This file is for doing data import.
 
 ``` r
 library(tidyverse)
+library(readxl) # read excels 
+library(haven) # import sas
 ```
 
 Import the first dataset.
@@ -235,15 +237,8 @@ fotr_df =
     range = "B3:D6" # specify the range of interest to be imported
     )
 
-fotr_df
+fotr_df = janitor::clean_names(fotr_df)
 ```
-
-    ## # A tibble: 3 × 3
-    ##   Race   Female  Male
-    ##   <chr>   <dbl> <dbl>
-    ## 1 Elf      1229   971
-    ## 2 Hobbit     14  3644
-    ## 3 Man         0  1995
 
 Two Towers data from LotR
 
@@ -254,12 +249,18 @@ two_towers_df =
   range = "F3:H6"  
   )
 
-two_towers_df
+two_towers_df = janitor::clean_names(two_towers_df)
 ```
 
-    ## # A tibble: 3 × 3
-    ##   Race   Female  Male
-    ##   <chr>   <dbl> <dbl>
-    ## 1 Elf       331   513
-    ## 2 Hobbit      0  2463
-    ## 3 Man       401  3589
+## Import SAS
+
+Read in the PULSE dataset
+
+``` r
+pulse_df = 
+  read_sas(
+    "data/public_pulse_data.sas7bdat"
+  )
+
+pulse_df = janitor::clean_names(pulse_df)
+```
