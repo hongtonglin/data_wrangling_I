@@ -189,3 +189,77 @@ Viewing: **do it in the console**
 ``` r
 view(pups_df)
 ```
+
+## Excel?
+
+``` r
+library(tidyverse)
+library(readxl)
+```
+
+``` r
+mlb_df =
+  read_xlsx("data/mlb11.xlsx") # read_xlsx can specify the cell range and sheet 
+```
+
+Look at the data
+
+``` r
+mlb_df
+```
+
+    ## # A tibble: 30 × 12
+    ##    team        runs at_bats  hits homeruns bat_avg strikeouts stolen_bases  wins
+    ##    <chr>      <dbl>   <dbl> <dbl>    <dbl>   <dbl>      <dbl>        <dbl> <dbl>
+    ##  1 Texas Ran…   855    5659  1599      210   0.283        930          143    96
+    ##  2 Boston Re…   875    5710  1600      203   0.28        1108          102    90
+    ##  3 Detroit T…   787    5563  1540      169   0.277       1143           49    95
+    ##  4 Kansas Ci…   730    5672  1560      129   0.275       1006          153    71
+    ##  5 St. Louis…   762    5532  1513      162   0.273        978           57    90
+    ##  6 New York …   718    5600  1477      108   0.264       1085          130    77
+    ##  7 New York …   867    5518  1452      222   0.263       1138          147    97
+    ##  8 Milwaukee…   721    5447  1422      185   0.261       1083           94    96
+    ##  9 Colorado …   735    5544  1429      163   0.258       1201          118    73
+    ## 10 Houston A…   615    5598  1442       95   0.258       1164          118    56
+    ## # ℹ 20 more rows
+    ## # ℹ 3 more variables: new_onbase <dbl>, new_slug <dbl>, new_obs <dbl>
+
+Load some LotR data
+
+Import FOTR words
+
+``` r
+fotr_df = 
+  read_xlsx(
+    "data/LotR_Words.xlsx",
+    range = "B3:D6" # specify the range of interest to be imported
+    )
+
+fotr_df
+```
+
+    ## # A tibble: 3 × 3
+    ##   Race   Female  Male
+    ##   <chr>   <dbl> <dbl>
+    ## 1 Elf      1229   971
+    ## 2 Hobbit     14  3644
+    ## 3 Man         0  1995
+
+Two Towers data from LotR
+
+``` r
+two_towers_df =
+  read_xlsx(
+  "data/LotR_Words.xlsx",
+  range = "F3:H6"  
+  )
+
+two_towers_df
+```
+
+    ## # A tibble: 3 × 3
+    ##   Race   Female  Male
+    ##   <chr>   <dbl> <dbl>
+    ## 1 Elf       331   513
+    ## 2 Hobbit      0  2463
+    ## 3 Man       401  3589

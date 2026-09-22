@@ -70,7 +70,50 @@ view(pups_df)
   
   
   
+## Excel?  
 
+```{r}
+library(tidyverse)
+library(readxl)
+```
+  
+```{r}
+mlb_df =
+  read_xlsx("data/mlb11.xlsx") # read_xlsx can specify the cell range and sheet 
+```
+  
+  
+Look at the data  
+
+```{r}
+mlb_df
+```
+  
+  
+Load some LotR data  
+  
+Import FOTR words  
+
+```{r}
+fotr_df = 
+  read_xlsx(
+    "data/LotR_Words.xlsx",
+    range = "B3:D6" # specify the range of interest to be imported
+    )
+
+fotr_df
+```
+  
+Two Towers data from LotR
+```{r}
+two_towers_df =
+  read_xlsx(
+  "data/LotR_Words.xlsx",
+  range = "F3:H6"  
+  )
+
+two_towers_df
+```
 
 
 
