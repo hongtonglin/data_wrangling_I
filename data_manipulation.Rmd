@@ -1,0 +1,65 @@
+---
+title: "Data Manipulation"
+author: "Hongtong Lin"
+date: "2026-09-24"
+output: github_document
+---
+The file is for doing data manipulation
+
+```{r load library, message = F}
+library(tidyverse)
+```
+
+
+```{r}
+litters_df = 
+  read_csv(
+    "data/FAS_litters.csv",
+    na = c("", "NA", ".")
+  )
+
+litters_df = janitor::clean_names(litters_df)
+
+pups_df = 
+  read.csv(
+    "data/FAS_pups.csv",
+    skip = 3,
+    na = c("", "NA", ".")
+  )
+
+pups_df = janitor::clean_names(pups_df)
+```
+## Select some variables
+
+```{r}
+select(litters_df, group, litter_number)
+
+#select(litters_df, group::gf_of_birth)
+
+#select(litters_df, ~group)
+
+select(litters_df, starts_with("gd"))
+
+select(litters_df, GROUP = group, everything())
+
+select(litters_df, LITTER = litter_number, everything())
+
+select(litters_df, -starts_with("gd"))
+```
+  
+  
+a couple of alternatives  
+
+```{r}
+rename(litters_df, GROUP = group) #rename col name of group to GROUP
+
+relocate(litters_df, litter_number, gd0_weight) #put columns in the new order, put litter_number and gd0_weight to the very front of the data frame
+```
+
+In the pups data, select litter number, sex, and PD ears  
+
+```{r}
+select(pups_df, litter_number, sex, pd_ears)
+```
+
+
