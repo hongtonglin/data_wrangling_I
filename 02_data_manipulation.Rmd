@@ -86,7 +86,7 @@ filter(pups_df, pd_walk <11, sex ==2)
 ```
   
   
-## mutate to change columns  
+## `mutate` to change columns  
 
 ```{r}
 mutate(litters_df, wt_gain = gd18_weight - gd0_weight)
@@ -109,11 +109,37 @@ mutate(
 ```
   
   
-## arrange the data  
+## `arrange` the data  
 
 ```{r}
 arrange(litters_df, pups_born_alive)  
 arrange(litters_df, desc(pups_born_alive))
+```
+  
+  
+## Do multiple steps, use Piping. cmd+shift+M  
+
+```{r}
+litters_df = 
+  read_csv("data/FAS_litters.csv", na = c("", "NA", ".")) |> #"and then", cmd+shift+M
+  janitor::clean_names() |> 
+  select(group, starts_with("gd")) |> 
+  drop_na() |> 
+  mutate(
+    wt_gain = gd18_weight - gd0_weight,
+    group = str_to_lower(group)
+  )
+
+```
+  
+Load pups, clean names, drop missing, keep litter number and pd variables, and add pd walk-7  
+```{r}
+pups_df = 
+  read_csv("data/FAS_pups.csv", skip =3, na = c("", "NA", ".")) |> 
+  janitor::clean_names() |> 
+  drop_na() |> 
+  select(litter_number, starts_with("pd")) |> 
+  mutate(pd_walk_minus_7=pd_walk-7 )
 ```
 
 
