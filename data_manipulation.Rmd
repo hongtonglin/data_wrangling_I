@@ -8,6 +8,7 @@ The file is for doing data manipulation
 
 ```{r load library, message = F}
 library(tidyverse)
+library(dplyr)
 ```
 
 
@@ -34,9 +35,9 @@ pups_df = janitor::clean_names(pups_df)
 ```{r}
 select(litters_df, group, litter_number)
 
-#select(litters_df, group::gf_of_birth)
+select(litters_df, group, gd_of_birth)
 
-#select(litters_df, ~group)
+select(litters_df, -group)
 
 select(litters_df, starts_with("gd"))
 
@@ -60,6 +61,59 @@ In the pups data, select litter number, sex, and PD ears
 
 ```{r}
 select(pups_df, litter_number, sex, pd_ears)
+```
+  
+## filter some rows  
+
+```{r filtering, message=F}
+filter(litters_df, gd_of_birth == 20) # the second clause is a logic factor
+
+filter(litters_df, pups_born_alive >5)
+
+filter(litters_df, pups_born_alive != 6)
+
+filter(litters_df, group %in% c("Con7", "Con8"))
+
+filter(litters_df, group %in% c("Con7", "Con8"), pups_born_alive <7)
+
+drop_na(litters_df, gd0_weight)
+```
+
+In the pups dataset, keep only rows where PD walk is lees than 11 and sex is 2  
+
+```{r}
+filter(pups_df, pd_walk <11, sex ==2)
+```
+  
+  
+## mutate to change columns  
+
+```{r}
+mutate(litters_df, wt_gain = gd18_weight - gd0_weight)
+```
+  
+```{r}
+mutate(
+  litters_df, 
+  wt_gain = gd18_weight - gd0_weight,
+  group = str_to_lower(group)
+)
+```
+  
+In the pups dataset, create a variable that subtracts 7 from PD walk.  
+```{r}
+mutate(
+  pups_df, 
+  pd_walk_sbt = pd_walk - 7
+)
+```
+  
+  
+## arrange the data  
+
+```{r}
+arrange(litters_df, pups_born_alive)  
+arrange(litters_df, desc(pups_born_alive))
 ```
 
 
