@@ -133,6 +133,7 @@ litters_df =
 ```
   
 Load pups, clean names, drop missing, keep litter number and pd variables, and add pd walk-7  
+
 ```{r}
 pups_df = 
   read_csv("data/FAS_pups.csv", skip =3, na = c("", "NA", ".")) |> 
@@ -140,6 +141,39 @@ pups_df =
   drop_na() |> 
   select(litter_number, starts_with("pd")) |> 
   mutate(pd_walk_minus_7=pd_walk-7 )
+``` 
+  
+Sometimes the first thing isn't a data frame  
+
+```{r}
+litters_df |> 
+  filter(group %in% c("con7", "con8")) |> 
+  lm(gd18_weight ~ gd0_weight, data = _) # "_" is a placeholder to point the "litters_df" to data = "".
+```
+  
+`select` vs `pull`  
+
+```{r}
+litters_df |> 
+  select(group)  
+
+litters_df |> 
+  pull(group)  # "pull" function to treat them as vectors
 ```
 
+
+never do `$`  
+
+```{r}
+litters_df$group # "$" is just a style and pipe friendly tool. it's not wrong. 
+```
+  
+  
+pipes and viewing  
+
+```{r}
+litters_df |> 
+  filter(group %in% c("con7", "con8")) |> 
+  view() # can put it in console
+```
 
