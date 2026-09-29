@@ -144,3 +144,50 @@ lotr_df <-
     values_to = "words"
   )
 ```
+
+## join FAS datasets
+
+import both
+
+``` r
+pups_df <- 
+  read_csv("data/FAS_pups.csv",
+           skip = 3,
+           na = c("", "NA", ".")) |> 
+  janitor::clean_names() |> 
+  mutate(
+    sex = case_match(
+      sex,
+      1 ~ "male",
+      2 ~ "female"
+    )
+  )
+```
+
+    ## Warning: There was 1 warning in `mutate()`.
+    ## ℹ In argument: `sex = case_match(sex, 1 ~ "male", 2 ~ "female")`.
+    ## Caused by warning:
+    ## ! `case_match()` was deprecated in dplyr 1.2.0.
+    ## ℹ Please use `recode_values()` instead.
+
+``` r
+litters_df <- 
+    read_csv("data/FAS_litters.csv",
+           na = c("", "NA", ".")) |> 
+  janitor::clean_names() |> 
+  relocate(litter_number) |> 
+  separate(group, into = c("dose", "day_of_tx"), 3) |> # 3 indicates the split happens after the 3rd character
+  mutate(
+    dose = str_to_lower(dose),
+    day_of_tx = as.numeric(day_of_tx),
+    gd_weight_gain = gd18_weight - gd0_weight
+  ) |> 
+  relocate(gd_weight_gain, .after = day_of_tx)
+```
+
+Join both
+
+``` r
+fas_df <-
+  left_join(pups_df, litters_df, by = "litter_number") # Joining with `by = join_by(litter_number)`
+```
