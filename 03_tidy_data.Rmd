@@ -1,0 +1,110 @@
+---
+title: "03_tidy_data"
+author: "Hongtong Lin"
+date: "2026-09-29"
+output: github_document
+---
+
+```{r}
+library(tidyverse)
+```
+
+
+## data tidying  
+
+```{r}
+pulse_df <- 
+  haven::read_sas("data/public_pulse_data.sas7bdat") |> 
+  janitor::clean_names()
+```
+
+let's tidy  
+```{r, eval = FALSE}
+pulse_tidy_df <- 
+  pulse_df |> 
+  pivot_longer(
+    bdi_score_bl:bdi_score_12m,
+    names_to = "visit", # send the colnames of the previous list as "visit"
+    names_prefix = "bdi_score_", # tell R that there's a prefix for every single value of the visit
+    values_to = "bdi_score" # send the values of the previous list "bdi_score"
+  ) |> 
+  mutate(
+    visit = replace(visit, visit == "bl", "00m")
+  )
+```
+  
+Practice  
+
+Import the littes data; keep columns litter number and GD weights; tidy  
+
+```{r}
+litters_df <- read_csv(
+  "data/FAS_litters.csv", na= c("", "NA", ".")
+) |> 
+  janitor::clean_names()
+
+litters_tidy_df <-
+  litters_df |> 
+  select(litter_number, gd0_weight:gd18_weight) |> 
+  pivot_longer(
+    gd0_weight:gd18_weight,
+    names_to = "gd",
+    names_prefix = "gd",
+    values_to = "weight"
+  ) |> 
+  mutate(
+    gd =  str_remove(gd, "_weight")
+  )
+
+#|> 
+#  mutate(
+ #   gd = recode_values(
+  #    gd,
+   #   "gd0_weight" ~ 0, # match "gd0_weight" and replace it with 0
+    #  "gd18_weight" ~ 18 # match "gd18_weight" and replace it with 18
+    #)
+ # )
+```
+
+
+## Deliberately untidy data  
+
+```{r}
+analysis_df <- 
+  tibble(
+    groups = c("treatment", "treatment", "placebo", "placebo"),
+    time  = c("pre", "post", "pre", "post"),
+    mean_outcome = c(4, 8, 3.5, 4.6)
+  )
+```
+
+untidy a data set: making a wide data set    
+
+```{r}
+analysis_df |> 
+  pivot_wider(
+    names_from = time,
+    values_from = mean_outcome
+  ) |> 
+  knitr::kable() # format the table as a markdown table
+```
+
+## Bind tables from Lord of ring tables  
+
+import each lotr movie table  
+
+```{r}
+fellowship_df <- 
+  readxl::read_xlsx("data/LotR_Words.xlsx", range = "B3:D6") |> 
+  mutate(movie = "fellowship")
+
+two_towers_df <- 
+  readxl::read_xlsx("data/LotR_Words.xlsx", range = "F3:H6") |> 
+  mutate(movie = "two_towers")
+
+retunr_df <- 
+  readxl::read_xlsx("data/LotR_Words.xlsx", range = "J3:L6") |> 
+  mutate(movie = "return of the king")
+```
+
+
