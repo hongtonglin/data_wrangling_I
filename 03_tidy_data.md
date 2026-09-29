@@ -1,25 +1,34 @@
----
-title: "03_tidy_data"
-author: "Hongtong Lin"
-date: "2026-09-29"
-output: github_document
----
+03_tidy_data
+================
+Hongtong Lin
+2026-09-29
 
-```{r}
+``` r
 library(tidyverse)
 ```
 
+    ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+    ## ✔ dplyr     1.2.1     ✔ readr     2.2.0
+    ## ✔ forcats   1.0.1     ✔ stringr   1.6.0
+    ## ✔ ggplot2   4.0.3     ✔ tibble    3.3.1
+    ## ✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+    ## ✔ purrr     1.2.2     
+    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ✖ dplyr::filter() masks stats::filter()
+    ## ✖ dplyr::lag()    masks stats::lag()
+    ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
 
-## data tidying  
+## data tidying
 
-```{r}
+``` r
 pulse_df <- 
   haven::read_sas("data/public_pulse_data.sas7bdat") |> 
   janitor::clean_names()
 ```
 
-let's tidy  
-```{r, eval = FALSE}
+let’s tidy
+
+``` r
 pulse_tidy_df <- 
   pulse_df |> 
   pivot_longer(
@@ -32,17 +41,28 @@ pulse_tidy_df <-
     visit = replace(visit, visit == "bl", "00m")
   )
 ```
-  
-Practice  
 
-Import the littes data; keep columns litter number and GD weights; tidy  
+Practice
 
-```{r}
+Import the littes data; keep columns litter number and GD weights; tidy
+
+``` r
 litters_df <- read_csv(
   "data/FAS_litters.csv", na= c("", "NA", ".")
 ) |> 
   janitor::clean_names()
+```
 
+    ## Rows: 49 Columns: 8
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (2): Group, Litter Number
+    ## dbl (6): GD0 weight, GD18 weight, GD of Birth, Pups born alive, Pups dead @ ...
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
 litters_tidy_df <-
   litters_df |> 
   select(litter_number, gd0_weight:gd18_weight) |> 
@@ -66,10 +86,9 @@ litters_tidy_df <-
  # )
 ```
 
+## Deliberately untidy data
 
-## Deliberately untidy data  
-
-```{r}
+``` r
 analysis_df <- 
   tibble(
     groups = c("treatment", "treatment", "placebo", "placebo"),
@@ -78,9 +97,9 @@ analysis_df <-
   )
 ```
 
-untidy a data set: making a wide data set    
+untidy a data set: making a wide data set
 
-```{r}
+``` r
 analysis_df |> 
   pivot_wider(
     names_from = time,
@@ -89,11 +108,16 @@ analysis_df |>
   knitr::kable() # format the table as a markdown table
 ```
 
-## Bind tables from Lord of ring tables  
+| groups    | pre | post |
+|:----------|----:|-----:|
+| treatment | 4.0 |  8.0 |
+| placebo   | 3.5 |  4.6 |
 
-import each lotr movie table  
+## Bind tables from Lord of ring tables
 
-```{r}
+import each lotr movie table
+
+``` r
 fellowship_df <- 
   readxl::read_xlsx("data/LotR_Words.xlsx", range = "B3:D6") |> 
   mutate(movie = "fellowship")
@@ -107,10 +131,9 @@ return_df <-
   mutate(movie = "return of the king")
 ```
 
+Next, join all of these together and binding
 
-Next, join all of these together and binding  
-
-```{r}
+``` r
 lotr_df <- 
   bind_rows(fellowship_df, two_towers_df, return_df) |> 
   janitor::clean_names() |> 
@@ -121,5 +144,3 @@ lotr_df <-
     values_to = "words"
   )
 ```
-
-
